@@ -1,75 +1,56 @@
 package hexlet.code.schemas;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Predicate;
 
-public class StringSchema {
-    private final List<String> validators = new ArrayList<>();
-    private Integer minLength;
+public class StringSchema extends BaseSchema {
+    private int minLength;
     private String subString;
 
     public StringSchema() {
     }
 
-    public final Boolean isValid(String strForCheck) {
-        if (validators.isEmpty()) {
-            return true;
+    private final Predicate<Object> isRequired = o -> {
+        if (o instanceof String) {
+            return o != null && !((String) o).isEmpty();
         }
+        return false;
+    };
 
-        for (String str : validators) {
-            switch (str) {
-                case "required":
-                    if (!isRequired(strForCheck)) {
-                        return false;
-                    }
-                    break;
-                case "minLength":
-                    if (!isMinLength(strForCheck)) {
-                        return false;
-                    }
-                    break;
-                case "contains":
-                    if (!isContains(strForCheck)) {
-                        return false;
-                    }
-                    break;
-                default:
-            }
+    private final Predicate<Object> isMinLength = o -> {
+        if (o instanceof String) {
+            return ((String) o).length() >= minLength;
         }
-        return true;
-    }
+        return false;
+    };
 
+    private final Predicate<Object> isContains = o -> {
+        if (o instanceof String) {
+            return ((String) o).contains(subString);
+        }
+        return false;
+    };
+
+    @Override
     public final StringSchema required() {
-        if (!validators.contains("required")) {
-            validators.add("required");
+        if (!this.getPredicates().containsKey("required")) {
+            this.setPredicates("required", isRequired);
         }
         return this;
     }
 
-    private Boolean isRequired(String str) {
-        return str != null && !str.equals("");
-    }
-
-    public final StringSchema minLength(Integer length) {
-        if (!validators.contains("minLength")) {
-            validators.add("minLength");
+    public final StringSchema minLength(int length) {
+        if (!this.getPredicates().containsKey("minLength")) {
+            this.setPredicates("minLength", isMinLength);
         }
         this.minLength = length;
         return this;
     }
 
-    private Boolean isMinLength(String str) {
-        return str.length() >= this.minLength;
-    }
-
     public final StringSchema contains(String str) {
-        if (!validators.contains("contains")) {
-            validators.add("contains");
+        if (!this.getPredicates().containsKey("contains")) {
+            this.setPredicates("contains", isContains);
         }
         this.subString = str;
         return this;
-    }
-    private Boolean isContains(String str) {
-        return str.contains(subString);
     }
 }
