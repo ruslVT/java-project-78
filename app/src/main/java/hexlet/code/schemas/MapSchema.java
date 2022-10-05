@@ -1,19 +1,15 @@
 package hexlet.code.schemas;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class MapSchema extends BaseSchema<MapSchema> {
-    private int size;
-    private Map<String, BaseSchema> checkShapeMap = new HashMap<>();
 
     public MapSchema() {
         super(Map.class);
     }
 
     public final MapSchema sizeof(int mapSize) {
-        this.addPredicates("sizeof", o -> o instanceof Map && ((Map<?, ?>) o).size() == this.size);
-        this.size = mapSize;
+        this.addPredicates("sizeof", o -> o instanceof Map && ((Map<?, ?>) o).size() == mapSize);
         return this;
     }
 
@@ -21,7 +17,7 @@ public class MapSchema extends BaseSchema<MapSchema> {
         this.addPredicates("shape", o -> {
             if (o instanceof Map) {
                 for (Map.Entry<?, ?> entry : ((Map<?, ?>) o).entrySet()) {
-                    if (!checkShapeMap.get(entry.getKey()).isValid(entry.getValue())) {
+                    if (!map.get(entry.getKey()).isValid(entry.getValue())) {
                         return false;
                     }
                 }
@@ -29,8 +25,6 @@ public class MapSchema extends BaseSchema<MapSchema> {
             }
             return false;
         });
-
-        checkShapeMap = map;
         return this;
     }
 }

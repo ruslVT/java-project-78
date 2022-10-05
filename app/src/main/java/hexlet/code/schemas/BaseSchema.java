@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 
 public abstract class BaseSchema<T extends BaseSchema<T>> {
     private final Class<?> classType;
-    private Map<String, Predicate<Object>> predicates = new LinkedHashMap<>();
+    private final Map<String, Predicate<Object>> predicates = new LinkedHashMap<>();
 
     protected BaseSchema(Class<?> type) {
         this.classType = type;
@@ -17,8 +17,8 @@ public abstract class BaseSchema<T extends BaseSchema<T>> {
     }
 
     public final T required() {
-        this.addPredicates("required", o -> classType.isInstance(o) && o != null && !o.equals(""));
-        return (T) this;
+        this.addPredicates("required", o -> classType.isInstance(o) && !o.equals(""));
+        return (T)  this;
     }
 
     public final Boolean isValid(Object obj) {

@@ -1,8 +1,6 @@
 package hexlet.code.schemas;
 
 public class NumberSchema extends BaseSchema<NumberSchema> {
-    private int rangeMin;
-    private int rangeMax;
 
     public NumberSchema() {
         super(Number.class);
@@ -15,10 +13,8 @@ public class NumberSchema extends BaseSchema<NumberSchema> {
 
     public final NumberSchema range(int min, int max) {
         this.addPredicates("range", o -> (o instanceof Integer
-                && (Integer) o >= rangeMin && (Integer) o <= rangeMax)
+                && (Integer) o >= min && (Integer) o <= max)
                 || o == null);
-        this.rangeMin = min;
-        this.rangeMax = max;
 
         return this;
     }

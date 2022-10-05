@@ -27,8 +27,7 @@ public class MapSchemaTest {
         Boolean actual1 = mapSchema.isValid(null);
         assertThat(actual1).isTrue();
 
-        int size = 2;
-        mapSchema.sizeof(size);
+        mapSchema.sizeof(2);
 
         Boolean actual2 = mapSchema.isValid(new HashMap<>(Map.of("key1", "value1", "key2", "value2")));
         assertThat(actual2).isTrue();
